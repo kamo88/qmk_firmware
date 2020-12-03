@@ -53,7 +53,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // TRS connection (via DT PIN)
 #define SOFT_SERIAL_PIN D2
 #define SERIAL_USE_MULTI_TRANSACTION
-#define MASTER_RIGHT
 
 // not using I2C
 // #define USE_I2C
