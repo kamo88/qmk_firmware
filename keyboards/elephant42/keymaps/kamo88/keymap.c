@@ -74,6 +74,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   )
 };
 
+static bool lower_pressed = false;
+static bool raise_pressed = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
   case QWERTY:
@@ -84,19 +87,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     break;
   case LOWER:
     if (record->event.pressed) {
+      lower_pressed = true;
+
       layer_on(_LOWER);
     } else {
       layer_off(_LOWER);
+      if (lower_pressed) {
+        tap_code(KC_SPC);
+      }
+      lower_pressed = false;
     }
     return false;
     break;
   case RAISE:
     if (record->event.pressed) {
+      raise_pressed = true;
+
       layer_on(_RAISE);
     } else {
       layer_off(_RAISE);
+      if (raise_pressed) {
+        tap_code(KC_SPC);
+      }
+      raise_pressed = false;
     }
     return false;
+    break;
+  default:
+    if (record->event.pressed) {
+      lower_pressed = false;
+      raise_pressed = false;
+    }
     break;
   }
 #ifdef OLED_DRIVER_ENABLE
