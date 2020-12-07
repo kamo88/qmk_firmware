@@ -34,6 +34,8 @@ enum custom_keycodes {
 #define KC_MU KC__MUTE
 #define KC_LSPC LT(_LOWER, KC_SPC)
 #define KC_RSPC LT(_RAISE, KC_SPC)
+#define KC_LOW MO(_LOWER)
+#define KC_RAI MO(_RAISE)
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -57,7 +59,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //`-------+-------+-------+-------+-------+-------|                                    |-------+-------+-------+-------+-------+-------|
              XXXXXXX,XXXXXXX,KC_LCBR,KC_LBRC,KC_LPRN,                                     KC_RPRN,KC_RBRC,KC_RCBR,KC_UNDS,KC_EQL ,
   //        `-------+-------+-------+-------+-------+-------+-------.    ,-------+-------+-------+-------+-------+-------+-------'
-                                     KC_LALT,KC_LCMD,KC_LSPC,KC_LSFT,     KC_DEL ,KC_RSPC,KC_ENT ,KC_BSPC
+                                     KC_LALT,KC_LCMD,_______,KC_LSFT,     KC_DEL ,_______,KC_ENT ,KC_BSPC
   //                                `-------+-------+-------+-------'    `-------+-------+-------+-------'
   ),
 
@@ -69,13 +71,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //`-------+-------+-------+-------+-------+-------|                                    |-------+-------+-------+-------+-------+-------'
              KC_BRMD,KC_BRMU,RGB_TOG,RGB_MOD,RGB_VAD,                                     KC_LEFT,KC_DOWN,KC_RGHT,KC_END ,KC_PGDN,
   //        `-------+-------+-------+-------+-------+-------+-------.    ,-------+-------+-------+-------+-------+-------+-------'
-                                     KC_LALT,KC_LCMD,KC_LSPC,KC_LSFT,     KC_DEL ,KC_RSPC,KC_ENT ,KC_BSPC
+                                     KC_LALT,KC_LCMD,_______,KC_LSFT,     KC_DEL ,_______,KC_ENT ,KC_BSPC
   //                                `-------+-------+-------+-------'    `-------+-------+-------+-------'
   )
 };
 
 static bool lower_pressed = false;
+static uint16_t lower_pressed_time = 0;
 static bool raise_pressed = false;
+static uint16_t raise_pressed_time = 0;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -88,11 +92,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case LOWER:
     if (record->event.pressed) {
       lower_pressed = true;
+      lower_pressed_time = record->event.time;
 
       layer_on(_LOWER);
     } else {
       layer_off(_LOWER);
-      if (lower_pressed) {
+      if (lower_pressed && (TIMER_DIFF_16(record->event.time, lower_pressed_time) < TAPPING_TERM)) {
         tap_code(KC_SPC);
       }
       lower_pressed = false;
@@ -102,11 +107,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   case RAISE:
     if (record->event.pressed) {
       raise_pressed = true;
+      raise_pressed_time = record->event.time;
 
       layer_on(_RAISE);
     } else {
       layer_off(_RAISE);
-      if (raise_pressed) {
+      if (raise_pressed && (TIMER_DIFF_16(record->event.time, raise_pressed_time) < TAPPING_TERM)) {
         tap_code(KC_SPC);
       }
       raise_pressed = false;

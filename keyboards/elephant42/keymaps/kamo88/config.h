@@ -17,6 +17,8 @@
 #pragma once
 
 // place overrides here
+#define MASTER_RIGHT
+#define TAPPING_TERM 200
 #ifdef OLED_DRIVER_ENABLE
 #define OLED_FONT_H "keymaps/default/glcdfont.c"
 #endif
