@@ -141,14 +141,14 @@ void matrix_scan_user(void) {}
 void led_set_user(uint8_t usb_led) {}
 
 #ifdef OLED_DRIVER_ENABLE
-oled_rotation_t oled_init_user(oled_rotation_t rotation) {
-    if (is_keyboard_master()) {
-      return OLED_ROTATION_180;
-    }
-    return rotation;
-}
+// oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+//     if (is_keyboard_master()) {
+//       return OLED_ROTATION_180;
+//     }
+//     return rotation;
+// }
 void oled_task_user(void) {
-  if (is_keyboard_master()) {
+  if (!is_keyboard_master()) {
     char disp[(21*4)+1] = {0};
     static char layer_names[_NUM_OF_LAYERS][10] = {"Default", "Lower", "Raise", "Adjust"};
     static char l1[] = "                \x94\x95\x96\x97";
